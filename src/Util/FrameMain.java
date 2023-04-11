@@ -22,10 +22,8 @@ public class FrameMain extends JFrame {
 
 
     private JPanel panelMain;
-    private JTextField textField1;
     private JTextArea textArea2Player;
     private JTextArea textArea1Player;
-    private JTextArea textArea3;
     private JButton buttonMove;
     private JTextArea textAreaResult;
 
@@ -99,10 +97,10 @@ public class FrameMain extends JFrame {
                 try {
                     if (finalFileChooserOpen.showOpenDialog(panelMain) == JFileChooser.APPROVE_OPTION) {
                         SimpleLinkedList<Integer> ans = ClassesForInAndOut.readFile(finalFileChooserOpen.getSelectedFile().getPath());
-                        for (int i = 0; i<36; i++){
-                            if (i < 18){
+                        for (int i = 0; i < 36; i++) {
+                            if (i < 18) {
                                 koloda1Player.addLast(ans.removeFirst());//в очередь тут совать
-                            }else {
+                            } else {
                                 koloda2Player.addLast(ans.removeFirst());//в очередь тут совать
                             }
                         }
@@ -113,46 +111,61 @@ public class FrameMain extends JFrame {
             }
         });
 
+
         JFileChooser finalFileChooserSave = fileChooserOpen;
         buttonMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    int karta1 = koloda1Player.removeFirst();
-                    int karta2 = koloda2Player.removeFirst();
+                    if (!koloda1Player.empty() && !koloda2Player.empty()) {
 
-                    textArea1Player.setText(String.valueOf(karta1));
-                    textArea2Player.setText(String.valueOf(karta2));
+                        int karta1 = koloda1Player.removeFirst();
+                        int karta2 = koloda2Player.removeFirst();
 
-                    if (karta1 > karta2){
-                        textAreaResult.setText("Раунд выиграл игрок 1");
-                        koloda1Player.addLast(karta2);
-                    } else if (karta1 < karta2){
-                        textAreaResult.setText("Раунд выиграл игрок 2");
-                        koloda2Player.addLast(karta1);
-                    } else {
-                        while (karta1==karta2){
-                            karta1 = koloda1Player.removeFirst();
-                            karta2 = koloda2Player.removeFirst();
+                        textArea1Player.setText(String.valueOf(karta1));
+                        textArea2Player.setText(String.valueOf(karta2));
 
-                            textArea1Player.append(" " + String.valueOf(karta1));
-                            textArea2Player.append(" " + String.valueOf(karta2));
-                        }
-                        if (karta1 > karta2){
+                        if (karta1 > karta2) {
                             textAreaResult.setText("Раунд выиграл игрок 1");
                             koloda1Player.addLast(karta2);
+                            koloda1Player.addLast(karta1);
                         } else if (karta1 < karta2) {
                             textAreaResult.setText("Раунд выиграл игрок 2");
                             koloda2Player.addLast(karta1);
+                            koloda2Player.addLast(karta2);
+                        } else {
+                            while (karta1 == karta2) {
+                                if (!koloda1Player.empty()) {
+                                    karta1 = koloda1Player.removeFirst();
+                                }
+                                if (!koloda2Player.empty()) {
+                                    karta2 = koloda2Player.removeFirst();
+                                }
+
+                                textArea1Player.append(" " + String.valueOf(karta1));
+                                textArea2Player.append(" " + String.valueOf(karta2));
+                            }
+                            if (!koloda1Player.empty() && !koloda2Player.empty()) {
+                                if (karta1 > karta2) {
+                                    textAreaResult.setText("Раунд выиграл игрок 1");
+                                    koloda1Player.addLast(karta2);
+                                    koloda1Player.addLast(karta1);
+                                } else if (karta1 < karta2) {
+                                    textAreaResult.setText("Раунд выиграл игрок 2");
+                                    koloda2Player.addLast(karta1);
+                                    koloda2Player.addLast(karta2);
+                                }
+                            }
                         }
                     }
-
-                    if (koloda1Player.empty()){
+                    if (koloda1Player.empty()) {
                         textAreaResult.setText("Игру выиграл игрок 2");
-                    }
-                    if (koloda2Player.empty()){
+                    } else if (koloda2Player.empty()) {
                         textAreaResult.setText("Игру выиграл игрок 1");
                     }
+
+
+
                     /*if (finalFileChooserSave.showSaveDialog(panelMain) == JFileChooser.APPROVE_OPTION) {
                         String str = textArea1Player.getText();
                         String[] strNew = str.split(" ");
@@ -171,9 +184,9 @@ public class FrameMain extends JFrame {
                     }
 
                      */
-                    } catch(Exception ex){
-                        SwingUtils.showErrorMessageBox(ex);
-                    }
+                } catch (Exception ex) {
+                    SwingUtils.showErrorMessageBox(ex);
+                }
             }
         });
         textArea1Player.addComponentListener(new ComponentAdapter() {
@@ -182,16 +195,6 @@ public class FrameMain extends JFrame {
                 super.componentResized(e);
             }
         });
-        textArea3.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-            }
-        });
-        textField1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            }
-        });
+
     }
 }
