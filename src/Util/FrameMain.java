@@ -11,14 +11,13 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 //import static Classes.ClassesForInAndOut.getString;
 import static Classes.MainLogic.*;
 
 
 public class FrameMain extends JFrame {
-    private JButton readFileBtn;
+    private JButton readFileButton;
     private JButton writeFileBtn;
 
 
@@ -27,7 +26,8 @@ public class FrameMain extends JFrame {
     private JTextArea textArea2Player;
     private JTextArea textArea1Player;
     private JTextArea textArea3;
-    private JButton Move;
+    private JButton buttonMove;
+    private JTextArea textAreaResult;
 
 
     static InputArgs inputArgs = new InputArgs();
@@ -88,22 +88,24 @@ public class FrameMain extends JFrame {
         fileChooserSave.setApproveButtonText("Save");
 
 
-        SimpleLinkedList<Integer> koloda1Player = new SimpleLinkedList<>();
-        SimpleLinkedList<Integer> koloda2Player = new SimpleLinkedList<>();
+        SimpleQueue<Integer> koloda1Player = new SimpleLinkedList<>();
+        SimpleQueue<Integer> koloda2Player = new SimpleLinkedList<>();
 
         JFileChooser finalFileChooserOpen = fileChooserOpen;
-        readFileBtn.addActionListener(new ActionListener() {
+
+        readFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
                     if (finalFileChooserOpen.showOpenDialog(panelMain) == JFileChooser.APPROVE_OPTION) {
                         SimpleLinkedList<Integer> ans = ClassesForInAndOut.readFile(finalFileChooserOpen.getSelectedFile().getPath());
                         for (int i = 0; i<36; i++){
-                            if (i < 0){
-                                koloda2Player.//в очередь тут совать
+                            if (i < 18){
+                                koloda1Player.addLast(ans.removeFirst());//в очередь тут совать
+                            }else {
+                                koloda2Player.addLast(ans.removeFirst());//в очередь тут совать
                             }
                         }
-                        textArea1Player.setText(massivVStroki(ans));
                     }
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
@@ -112,11 +114,46 @@ public class FrameMain extends JFrame {
         });
 
         JFileChooser finalFileChooserSave = fileChooserOpen;
-        writeFileBtn.addActionListener(new ActionListener() {
+        buttonMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (finalFileChooserSave.showSaveDialog(panelMain) == JFileChooser.APPROVE_OPTION) {
+                    int karta1 = koloda1Player.removeFirst();
+                    int karta2 = koloda2Player.removeFirst();
+
+                    textArea1Player.setText(String.valueOf(karta1));
+                    textArea2Player.setText(String.valueOf(karta2));
+
+                    if (karta1 > karta2){
+                        textAreaResult.setText("Раунд выиграл игрок 1");
+                        koloda1Player.addLast(karta2);
+                    } else if (karta1 < karta2){
+                        textAreaResult.setText("Раунд выиграл игрок 2");
+                        koloda2Player.addLast(karta1);
+                    } else {
+                        while (karta1==karta2){
+                            karta1 = koloda1Player.removeFirst();
+                            karta2 = koloda2Player.removeFirst();
+
+                            textArea1Player.append(" " + String.valueOf(karta1));
+                            textArea2Player.append(" " + String.valueOf(karta2));
+                        }
+                        if (karta1 > karta2){
+                            textAreaResult.setText("Раунд выиграл игрок 1");
+                            koloda1Player.addLast(karta2);
+                        } else if (karta1 < karta2) {
+                            textAreaResult.setText("Раунд выиграл игрок 2");
+                            koloda2Player.addLast(karta1);
+                        }
+                    }
+
+                    if (koloda1Player.empty()){
+                        textAreaResult.setText("Игру выиграл игрок 2");
+                    }
+                    if (koloda2Player.empty()){
+                        textAreaResult.setText("Игру выиграл игрок 1");
+                    }
+                    /*if (finalFileChooserSave.showSaveDialog(panelMain) == JFileChooser.APPROVE_OPTION) {
                         String str = textArea1Player.getText();
                         String[] strNew = str.split(" ");
                         SimpleLinkedList<Integer> ans = new SimpleLinkedList<>();
@@ -132,6 +169,8 @@ public class FrameMain extends JFrame {
                         pw.println(textArea3.getText());
                         pw.close();
                     }
+
+                     */
                     } catch(Exception ex){
                         SwingUtils.showErrorMessageBox(ex);
                     }

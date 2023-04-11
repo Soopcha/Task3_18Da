@@ -25,7 +25,7 @@ https://ru.wikipedia.org/wiki/Пьяница_(карточная_игра). 36 �
 ход
  */
 
-public class SimpleLinkedList<T> implements Iterable<Integer> {
+public class SimpleLinkedList<T> implements Iterable<T> , SimpleQueue<T> {
 
     public static class SimpleLinkedListException extends Exception {
         public SimpleLinkedListException(String message) {
@@ -34,25 +34,25 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
     }
 
     private class SimpleLinkedListNode<T> {
-        public int value;
-        public SimpleLinkedListNode<Integer> next;
+        public T value;
+        public SimpleLinkedListNode<T> next;
 
-        public SimpleLinkedListNode(int value, SimpleLinkedListNode<Integer> next) {
+        public SimpleLinkedListNode (T value, SimpleLinkedListNode<T> next) {
             this.value = value;
             this.next = next;
         }
 
-        public SimpleLinkedListNode(Integer value) {
+        public SimpleLinkedListNode(T value) {
             this(value, null);
         }
     }
 
-    private SimpleLinkedListNode<Integer> head = null;
-    private SimpleLinkedListNode<Integer> tail = null;
+    private SimpleLinkedListNode<T> head = null;
+    private SimpleLinkedListNode<T> tail = null;
     private int count = 0;
 
 
-    public void addFirst(int value) {
+    public void addFirst(T value) {
         head = new SimpleLinkedListNode<>(value, head);
         if (count == 0) {
             tail = head;
@@ -60,8 +60,8 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
         count++;
     }
 
-    public void addLast(int value) {
-        SimpleLinkedListNode<Integer> temp = new SimpleLinkedListNode<>(value);
+    public void addLast(T value) {
+        SimpleLinkedListNode<T> temp = new SimpleLinkedListNode<>(value);
         if (count == 0) {
             head = tail = temp;
         } else {
@@ -77,9 +77,9 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
         }
     }
 
-    private SimpleLinkedListNode<Integer> getNode(int index) {//по индексу будет возвращать элемент
+    private SimpleLinkedListNode<T> getNode(int index) {//по индексу будет возвращать элемент
         int i = 0;
-        for (SimpleLinkedListNode<Integer> curr = head; curr != null; curr = curr.next, i++) {
+        for (SimpleLinkedListNode<T> curr = head; curr != null; curr = curr.next, i++) {
             if (i == index) {
                 return curr;
             }
@@ -87,10 +87,10 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
         return null;
     }
 
-    public int removeFirst() throws SimpleLinkedListException {
+    public T removeFirst() throws SimpleLinkedListException {
         checkEmpty();
 
-        int value = head.value;
+        T value = head.value;
         head = head.next;
         if (count == 1) {
             tail = null;
@@ -99,23 +99,23 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
         return value;
     }
 
-    public int removeLast() throws SimpleLinkedListException {
+    public T removeLast() throws SimpleLinkedListException {
         return remove(count - 1);
     }
 
-    public int remove(int index) throws SimpleLinkedListException {
+    public T remove(int index) throws SimpleLinkedListException {
         checkEmpty();
         if (index < 0 || index >= count) {
             throw new SimpleLinkedListException("Incorrect index");
         }
 
-        int value;
+        T value;
         if (index == 0) {
             value = head.value;
             head = head.next;
         } else {
-            SimpleLinkedListNode<Integer> prev = getNode(index - 1);
-            SimpleLinkedListNode<Integer> curr = prev.next;
+            SimpleLinkedListNode<T> prev = getNode(index - 1);
+            SimpleLinkedListNode<T> curr = prev.next;
             value = curr.value;
             prev.next = curr.next;
             if (index == count - 1) {
@@ -126,14 +126,14 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
         return value;
     }
 
-    public void insert(int index, int value) throws SimpleLinkedListException {
+    public void insert(int index, T value) throws SimpleLinkedListException {
         if (index < 0 || index > count) {
             throw new SimpleLinkedListException("Incorrect index");
         }
         if (index == 0) {
             addFirst(value);
         } else {
-            SimpleLinkedListNode<Integer> prev = getNode(index - 1);
+            SimpleLinkedListNode<T> prev = getNode(index - 1);
             prev.next = new SimpleLinkedListNode<>(value, prev.next);
             if (index == count) {
                 tail = prev.next;
@@ -142,41 +142,41 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
         count++;
     }
 
-    public int size() {
+    public int count() {
         return count;
     }
 
-    public int getFirst() throws SimpleLinkedListException {
+    public T getFirst() throws SimpleLinkedListException {
         checkEmpty();
 
         return head.value;
     }
 
-    public int getLast() throws SimpleLinkedListException {
+    public T getLast() throws SimpleLinkedListException {
         checkEmpty();
 
         return tail.value;
     }
 
-    public int get(int index) throws SimpleLinkedListException {
+    public T get(int index) throws SimpleLinkedListException {
         if (index < 0 || index >= count) {
             throw new SimpleLinkedListException("Incorrect index");
         }
         return getNode(index).value;
     }
 
-    private SimpleLinkedListNode<Integer> rearrangingElements(int index1, int index2) { // метод перестановки эл (эл нумеруются с 0)
+    private SimpleLinkedListNode<T> rearrangingElements(int index1, int index2) { // метод перестановки эл (эл нумеруются с 0)
         //в <> Integer тк мы
-        int n = size();
+        int n = count();
         if (n > 1) { // тк можно переставлять эл только если их 2 и больше
-            SimpleLinkedListNode<Integer> prev1 = null;
-            SimpleLinkedListNode<Integer> prev2 = null;
+            SimpleLinkedListNode<T> prev1 = null;
+            SimpleLinkedListNode<T> prev2 = null;
 
-            SimpleLinkedListNode<Integer> curr1 = null;
-            SimpleLinkedListNode<Integer> curr2 = null;
+            SimpleLinkedListNode<T> curr1 = null;
+            SimpleLinkedListNode<T> curr2 = null;
 
-            SimpleLinkedListNode<Integer> next1 = null;
-            SimpleLinkedListNode<Integer> next2 = null;
+            SimpleLinkedListNode<T> next1 = null;
+            SimpleLinkedListNode<T> next2 = null;
 
             /*
             int i = 0;
@@ -219,7 +219,7 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
 
 
             int i = 0;
-            for (SimpleLinkedListNode<Integer> currInTheMoment = head; currInTheMoment != null; currInTheMoment = currInTheMoment.next, i++) {
+            for (SimpleLinkedListNode<T> currInTheMoment = head; currInTheMoment != null; currInTheMoment = currInTheMoment.next, i++) {
                 /* Пыталась как-то улучшить(уменьшить код, но это тоже надо доработать и не факт что в итоге строк меньше будет)
                 if ((index1 == i && i == 0 )|| (index2 == i && i == 0)){
                     if (index1 == 0){
@@ -296,15 +296,21 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
 
     public void getAnswer() { //метод - основная логика моего таска
 
+    }
+
+    public T element() throws Exception {
+        if (count() == 0) {
+            throw new Exception("Queue is empty");
         }
+        return (T) head.value;
     }
     //    .\input.txt .\output.txt
 
 
     @Override
-    public Iterator<Integer> iterator() {
-        class SimpleLinkedListIterator implements Iterator<Integer> {
-            SimpleLinkedListNode<Integer> curr = head;
+    public Iterator<T> iterator() {
+        class SimpleLinkedListIterator implements Iterator<T> {
+            SimpleLinkedListNode<T> curr = head;
 
             @Override
             public boolean hasNext() {
@@ -312,13 +318,13 @@ public class SimpleLinkedList<T> implements Iterable<Integer> {
             }
 
             @Override
-            public Integer next() {
-                int value = curr.value;
+            public T next() {
+                T value = curr.value;
                 curr = curr.next;
                 return value;
             }
         }
 
-        return new SimpleLinkedListIterator();
+        return (Iterator<T>) new SimpleLinkedListIterator();
     }
 }
