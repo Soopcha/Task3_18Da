@@ -131,6 +131,7 @@ public class FrameMain extends JFrame {
                         Integer v = it2.next();
                         koloda2Player.addLast(v);
                     }
+                    textAreaResult.setText("Карты пермешаны");
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
                 }
@@ -150,6 +151,7 @@ public class FrameMain extends JFrame {
                     }
                     textArea1Player.setText("  ");
                     textArea2Player.setText("  ");
+                    textAreaResult.setText("Игра перезапущена");
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
                 }
