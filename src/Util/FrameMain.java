@@ -139,6 +139,8 @@ public class FrameMain extends JFrame {
 
 
 
+
+
         restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -149,11 +151,15 @@ public class FrameMain extends JFrame {
                     while (!koloda2Player.empty()){
                         koloda2Player.removeFirst();
                     }
+                    textArea1Player.setText("  ");
+                    textArea2Player.setText("  ");
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
                 }
             }
         });
+
+
 
 
         JFileChooser finalFileChooserSave = fileChooserOpen;
