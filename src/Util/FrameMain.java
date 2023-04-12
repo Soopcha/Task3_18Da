@@ -11,6 +11,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 //import static Classes.ClassesForInAndOut.getString;
 import static Classes.MainLogic.*;
@@ -18,8 +19,6 @@ import static Classes.MainLogic.*;
 
 public class FrameMain extends JFrame {
     private JButton readFileButton;
-    private JButton writeFileBtn;
-
 
     private JPanel panelMain;
     private JTextArea textArea2Player;
@@ -64,7 +63,7 @@ public class FrameMain extends JFrame {
 
     public FrameMain() throws IOException {
 
-        runTest();
+        //runTest();
 
         this.setTitle("Основная программа");
         this.setContentPane(panelMain);
@@ -122,7 +121,34 @@ public class FrameMain extends JFrame {
                     MainLogic.randomQueue(list); // в наш list положили рандомные картишки
                     MainLogic.randomQueue(list2); // в наш list2 положили рандомные картишки
 
-                    //итератором тут
+                    Iterator<Integer> it = list.iterator();
+                    while (it.hasNext()) {
+                        Integer v = it.next();
+                        koloda1Player.addLast(v);
+                    }
+                    Iterator<Integer> it2 = list2.iterator();
+                    while (it2.hasNext()) {
+                        Integer v = it.next();
+                        koloda2Player.addLast(v);
+                    }
+                } catch (Exception e) {
+                    SwingUtils.showErrorMessageBox(e);
+                }
+            }
+        });
+
+
+
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    while (!koloda1Player.empty()){
+                        koloda1Player.removeFirst();
+                    }
+                    while (!koloda2Player.empty()){
+                        koloda2Player.removeFirst();
+                    }
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
                 }
@@ -131,6 +157,7 @@ public class FrameMain extends JFrame {
 
 
         JFileChooser finalFileChooserSave = fileChooserOpen;
+
         buttonMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
