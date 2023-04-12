@@ -138,17 +138,14 @@ public class FrameMain extends JFrame {
         });
 
 
-
-
-
         restartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    while (!koloda1Player.empty()){
+                    while (!koloda1Player.empty()) {
                         koloda1Player.removeFirst();
                     }
-                    while (!koloda2Player.empty()){
+                    while (!koloda2Player.empty()) {
                         koloda2Player.removeFirst();
                     }
                     textArea1Player.setText("  ");
@@ -160,14 +157,13 @@ public class FrameMain extends JFrame {
         });
 
 
-
-
         JFileChooser finalFileChooserSave = fileChooserOpen;
 
         buttonMove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    boolean nechia = false;
                     if (!koloda1Player.empty() && !koloda2Player.empty()) {
 
                         int karta1 = koloda1Player.removeFirst();
@@ -188,13 +184,18 @@ public class FrameMain extends JFrame {
                             while (karta1 == karta2) {
                                 if (!koloda1Player.empty()) {
                                     karta1 = koloda1Player.removeFirst();
+                                    textArea1Player.append(" " + String.valueOf(karta1));
                                 }
                                 if (!koloda2Player.empty()) {
                                     karta2 = koloda2Player.removeFirst();
+                                    textArea2Player.append(" " + String.valueOf(karta2));
+                                }
+                                if (koloda1Player.empty() && koloda2Player.empty()) {
+                                    textAreaResult.setText("Игру выиграл ничья???????");
+                                    nechia = true;
+                                    break;
                                 }
 
-                                textArea1Player.append(" " + String.valueOf(karta1));
-                                textArea2Player.append(" " + String.valueOf(karta2));
                             }
                             if (!koloda1Player.empty() && !koloda2Player.empty()) {
                                 if (karta1 > karta2) {
@@ -209,10 +210,10 @@ public class FrameMain extends JFrame {
                             }
                         }
                     }
-                    if (koloda1Player.empty()) {
-                        textAreaResult.setText("Игру выиграл игрок 2");
-                    } else if (koloda2Player.empty()) {
-                        textAreaResult.setText("Игру выиграл игрок 1");
+                    if (koloda1Player.empty() && !nechia) {
+                        textAreaResult.setText("Игру выиграл игрок 2!");
+                    } else if (koloda2Player.empty() && !nechia) {
+                        textAreaResult.setText("Игру выиграл игрок 1!");
                     }
 
 
