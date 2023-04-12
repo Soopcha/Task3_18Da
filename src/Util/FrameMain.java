@@ -128,7 +128,7 @@ public class FrameMain extends JFrame {
                     }
                     Iterator<Integer> it2 = list2.iterator();
                     while (it2.hasNext()) {
-                        Integer v = it.next();
+                        Integer v = it2.next();
                         koloda2Player.addLast(v);
                     }
                 } catch (Exception e) {
