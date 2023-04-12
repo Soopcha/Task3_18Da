@@ -71,6 +71,15 @@ public class SimpleLinkedList<T> implements Iterable<T> , SimpleQueue<T> {
         count++;
     }
 
+    public void set(int index, T value){
+        int i = 0;
+        for (SimpleLinkedListNode<T> curr = head; curr != null; curr = curr.next, i++) {
+            if (i == index) {
+                curr.value = value;
+            }
+        }
+    }
+
     private void checkEmpty() throws SimpleLinkedListException {
         if (count == 0) {
             throw new SimpleLinkedListException("Empty list");
@@ -126,7 +135,7 @@ public class SimpleLinkedList<T> implements Iterable<T> , SimpleQueue<T> {
         return value;
     }
 
-    public void insert(int index, T value) throws SimpleLinkedListException {
+    public void insert(int index, T value) throws SimpleLinkedListException { //вставить
         if (index < 0 || index > count) {
             throw new SimpleLinkedListException("Incorrect index");
         }

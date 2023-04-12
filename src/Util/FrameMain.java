@@ -26,6 +26,8 @@ public class FrameMain extends JFrame {
     private JTextArea textArea1Player;
     private JButton buttonMove;
     private JTextArea textAreaResult;
+    private JButton randomButton;
+    private JButton restartButton;
 
 
     static InputArgs inputArgs = new InputArgs();
@@ -105,6 +107,22 @@ public class FrameMain extends JFrame {
                             }
                         }
                     }
+                } catch (Exception e) {
+                    SwingUtils.showErrorMessageBox(e);
+                }
+            }
+        });
+
+        randomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    SimpleLinkedList<Integer> list = new SimpleLinkedList<>();
+                    SimpleLinkedList<Integer> list2 = new SimpleLinkedList<>();
+                    MainLogic.randomQueue(list); // в наш list положили рандомные картишки
+                    MainLogic.randomQueue(list2); // в наш list2 положили рандомные картишки
+
+                    //итератором тут
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
                 }
@@ -196,5 +214,9 @@ public class FrameMain extends JFrame {
             }
         });
 
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
