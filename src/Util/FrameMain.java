@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 //import static Classes.ClassesForInAndOut.getString;
 import static Classes.MainLogic.*;
+import static java.lang.Integer.valueOf;
 
 
 public class FrameMain extends JFrame {
@@ -26,7 +27,7 @@ public class FrameMain extends JFrame {
     private JButton buttonMove;
     private JTextArea textAreaResult;
     private JButton randomButton;
-    private JButton restartButton;
+    private JButton cleanButton;
 
 
     static InputArgs inputArgs = new InputArgs();
@@ -117,20 +118,21 @@ public class FrameMain extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
                     SimpleLinkedList<Integer> list = new SimpleLinkedList<>();
-                    SimpleLinkedList<Integer> list2 = new SimpleLinkedList<>();
-                    MainLogic.randomQueue(list); // в наш list положили рандомные картишки
-                    MainLogic.randomQueue(list2); // в наш list2 положили рандомные картишки
+                    MainLogic.randomQueue36Cards(list); // в наш list положили рандомные картишки
 
+                    int count1 = 0;
                     Iterator<Integer> it = list.iterator();
                     while (it.hasNext()) {
-                        Integer v = it.next();
-                        koloda1Player.addLast(v);
+                        if (count1 < 19) {
+                            Integer v = it.next();
+                            koloda1Player.addLast(v);
+                            count1++;
+                        } else {
+                            Integer v = it.next();
+                            koloda2Player.addLast(v);
+                        }
                     }
-                    Iterator<Integer> it2 = list2.iterator();
-                    while (it2.hasNext()) {
-                        Integer v = it2.next();
-                        koloda2Player.addLast(v);
-                    }
+
                     textAreaResult.setText("Карты пермешаны");
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
@@ -139,7 +141,7 @@ public class FrameMain extends JFrame {
         });
 
 
-        restartButton.addActionListener(new ActionListener() {
+        cleanButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
@@ -151,7 +153,7 @@ public class FrameMain extends JFrame {
                     }
                     textArea1Player.setText("  ");
                     textArea2Player.setText("  ");
-                    textAreaResult.setText("Игра перезапущена");
+                    textAreaResult.setText("Игра очищена");
                 } catch (Exception e) {
                     SwingUtils.showErrorMessageBox(e);
                 }
@@ -171,8 +173,8 @@ public class FrameMain extends JFrame {
                         int karta1 = koloda1Player.removeFirst();
                         int karta2 = koloda2Player.removeFirst();
 
-                        textArea1Player.setText(String.valueOf(karta1));
-                        textArea2Player.setText(String.valueOf(karta2));
+                        textArea1Player.setText(nameOfTheCards(valueOf(karta1)));
+                        textArea2Player.setText(nameOfTheCards(valueOf(karta2)));
 
                         if (karta1 > karta2) {
                             textAreaResult.setText("Раунд выиграл игрок 1");
@@ -186,11 +188,11 @@ public class FrameMain extends JFrame {
                             while (karta1 == karta2) {
                                 if (!koloda1Player.empty()) {
                                     karta1 = koloda1Player.removeFirst();
-                                    textArea1Player.append(" " + String.valueOf(karta1));
+                                    textArea1Player.append(" " + nameOfTheCards(valueOf(karta1)));
                                 }
                                 if (!koloda2Player.empty()) {
                                     karta2 = koloda2Player.removeFirst();
-                                    textArea2Player.append(" " + String.valueOf(karta2));
+                                    textArea2Player.append(" " + nameOfTheCards(valueOf(karta2)));
                                 }
                                 if (koloda1Player.empty() && koloda2Player.empty()) {
                                     textAreaResult.setText("Игру выиграл ничья???????");
